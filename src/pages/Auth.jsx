@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Eye,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 
 function Auth() {
+  const navigate = useNavigate();
   const [mode, setMode] = useState("signin");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -32,26 +34,28 @@ function Auth() {
       [name]: type === "checkbox" ? checked : value,
     }));
   }
+function handleSubmit(event) {
+  event.preventDefault();
 
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    if (mode === "signup" && formData.password !== formData.confirmPassword) {
+  if (mode === "signup") {
+    if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match.");
       return;
     }
 
-    if (mode === "signup" && !formData.terms) {
+    if (!formData.terms) {
       alert("Please accept the Terms and Conditions.");
       return;
     }
-
-    alert(
-      mode === "signin"
-        ? "Sign in is ready. Backend authentication will be connected later."
-        : "Sign up is ready. Backend authentication will be connected later."
-    );
   }
+
+  if (formData.role === "vendor") {
+    navigate("/vendor");
+  } else {
+    alert("Buyer dashboard will be connected later.");
+  }
+}
+
 
   return (
     <div className="auth-page">
